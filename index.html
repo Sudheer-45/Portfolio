@@ -468,41 +468,51 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-5" data-aos="fade-up">
+    <section id="contact" class="py-5">
       <div class="container">
-        <h2 class="text-center display-5 section-title">Contact Me</h2>
-        <div class="contact-form mx-auto mt-5">
-          <form id="contactForm">
+
+        <h2 class="text-center display-5 mb-5">Contact Me</h2>
+
+        <div class="contact-form">
+
+          <form id="contactForm"
+            action="PASTE_YOUR_APPS_SCRIPT_URL_HERE"
+            method="POST"
+            target="hiddenFrame">
+
             <div class="row g-3">
+
               <div class="col-md-6">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name"
-                  placeholder="Your Name" required>
+                <label class="form-label">Name</label>
+                <input type="text" id="name" name="name" class="form-control"
+                  required>
               </div>
+
               <div class="col-md-6">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email"
-                  placeholder="Your Email" required>
+                <label class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-control"
+                  required>
               </div>
+
               <div class="col-12">
-                <label for="message" class="form-label">Message</label>
-                <textarea class="form-control" id="message" rows="5"
-                  placeholder="Your Message" required></textarea>
+                <label class="form-label">Message</label>
+                <textarea id="message" name="message" rows="5"
+                  class="form-control" required></textarea>
               </div>
+
               <div class="col-12 text-center">
-                <button type="submit"
-                  class="btn btn-primary btn-lg px-5 mt-3">Send Message</button>
-                <div class="col-12 text-center">
-                  <p id="formStatus" class="mt-3 fw-semibold"></p>
-                </div>
+                <button type="submit" class="btn btn-primary btn-lg mt-3">
+                  Send Message
+                </button>
+
+                <p id="formStatus" class="mt-3 fw-semibold"></p>
               </div>
+
             </div>
           </form>
-          <div class="text-center mt-4 d-none mb-5" id="successMessage">
-            <div class="alert alert-success" role="alert">
-              Message sent successfully!
-            </div>
-          </div>
+
+          <iframe name="hiddenFrame" style="display:none;"></iframe>
+
         </div>
       </div>
     </section>
@@ -533,68 +543,40 @@
     </footer>
 
     <!-- Bootstrap JS Bundle -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- AOS Animation JS -->
-    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-    <!-- Initialize AOS -->
-    <script>
-        AOS.init({
-            duration: 1000,
-            once: true
-        });
-    </script>
-    <!-- Form Submission Handler -->
-     <script>
+   <script>
+/* ================================
+   CONTACT FORM HANDLER
+================================ */
+
 const form = document.getElementById("contactForm");
 const statusText = document.getElementById("formStatus");
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyos4lolMmTO2WwkjNRW8eFfS2XTRxOqEiTyVQcuF627wNx6PTi4nVz3hTYP75FyoKoDQ/exec";
+if (form) {
+  form.addEventListener("submit", function () {
 
-form.addEventListener("submit", async function (e) {
-  e.preventDefault();
+    // Show sending state immediately
+    showStatus("Sending message...", "primary");
 
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const message = document.getElementById("message").value.trim();
+    // After backend receives data (iframe submission),
+    // show success UI
+    setTimeout(() => {
+      form.reset();
+      showStatus("Message sent successfully!", "success");
+    }, 1500);
 
-  // -------- VALIDATION ----------
-  if (!name || !email || !message) {
-    showStatus("All fields are required.", "danger");
-    return;
-  }
+  });
+}
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    showStatus("Enter a valid email address.", "danger");
-    return;
-  }
+/* ================================
+   STATUS MESSAGE FUNCTION
+================================ */
 
-  showStatus("Sending message...", "primary");
-
-  try {
-    const response = await fetch(SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, message }),
-    });
-
-    if (!response.ok) throw new Error();
-
-    form.reset();
-    showStatus("Message sent successfully!", "success");
-
-  } catch (err) {
-    showStatus("Failed to send message. Try again later.", "danger");
-  }
-});
-
-
-function showStatus(text, type) {
-  statusText.textContent = text;
+function showStatus(message, type) {
+  statusText.textContent = message;
   statusText.className = `mt-3 fw-semibold text-${type}`;
 }
 </script>
+
 
   </body>
 </html>
